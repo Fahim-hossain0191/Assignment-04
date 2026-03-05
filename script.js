@@ -1,10 +1,13 @@
 let interview=[];
 let rejected=[];
+let activeFilter="all";
 const all_btn=document.getElementById('all_filter_btn');
 const interview_btn=document.getElementById('interview_filter_btn');
 const rejected_btn=document.getElementById('rejected_filter_btn');
 const filtered_section=document.getElementById('filtered_section');
 const hero_section=document.getElementById('hero_section');
+const jobs_count=document.getElementById('jobs_count');
+
 
 
 function count(){
@@ -12,14 +15,30 @@ function count(){
     const total_count=document.getElementById('total_count');
     const count=total.children.length;
     total_count.innerText=count;
+    console.log(count);
+    // jobs_count.innerText = `${count} jobs`;
     const interview_count=document.getElementById('interview_count');
     const interviews=interview.length;
     interview_count.innerText=interviews;
+    
     const rejected_count=document.getElementById('rejected_count');
     const rejections=rejected.length;
     rejected_count.innerText=rejections;
+    if(activeFilter==="all"){
+      jobs_count.innerText=`${count} jobs`;
+    }
+    else if(activeFilter==="interview"){
+      jobs_count.innerText=`${interviews} of ${count} jobs`;
+    }
+    else if(activeFilter==="rejected"){
+      jobs_count.innerText=`${rejections} of ${count} jobs`;
+    }
 }
 count();
+
+   
+
+
 
 function toggleStyle(id){
        all_btn.classList.add('bg-gray-300', 'text-black');
@@ -27,27 +46,33 @@ function toggleStyle(id){
        rejected_btn.classList.add('bg-gray-300', 'text-black');
 
 
-        all_btn.classList.remove('bg-black', 'text-white');
-    interview_btn.classList.remove('bg-black', 'text-white');
-    rejected_btn.classList.remove('bg-black', 'text-white');
+    //     all_btn.classList.remove('bg-black', 'text-white');
+    // interview_btn.classList.remove('bg-black', 'text-white');
+    // rejected_btn.classList.remove('bg-black', 'text-white');
      const selected = document.getElementById(id);
      selected.classList.remove('bg-gray-300', 'text-black');
      selected.classList.add('bg-blue-500', 'text-white');
      console.log(selected);
      if(id=='interview_filter_btn'){
+            activeFilter="interview";
            hero_section.classList.add('hidden');
             filtered_section.classList.remove('hidden');
             render_interview();
      }else if(id=='all_filter_btn'){
+       activeFilter="all";
       hero_section.classList.remove('hidden');
     filtered_section.classList.add('hidden');;
      }
      else if(id=='rejected_filter_btn'){
+       activeFilter="rejected";
          hero_section.classList.add('hidden');
             filtered_section.classList.remove('hidden');
             render_rejected();
      }
+     count();
 }
+
+
 
 
 
@@ -218,4 +243,16 @@ function render_rejected(){
  } 
 }
 
-
+document.addEventListener("click",function(event){
+  if(event.target.classList.contains('delete')){
+  const card=event.target.parentNode.parentNode;
+  const title=card.querySelector('.title').innerText;
+  console.log(title);
+  interview=interview.filter(item=> item.title!==title);
+  rejected=rejected.filter(item =>item.title!==title);
+  card.remove();
+  count();
+  
+  }
+   
+})
