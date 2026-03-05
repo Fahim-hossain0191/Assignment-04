@@ -15,23 +15,40 @@ function count(){
     const total_count=document.getElementById('total_count');
     const count=total.children.length;
     total_count.innerText=count;
-    console.log(count);
+    
     // jobs_count.innerText = `${count} jobs`;
     const interview_count=document.getElementById('interview_count');
     const interviews=interview.length;
     interview_count.innerText=interviews;
-    
+    const empty_section=document.getElementById('empty_section');
     const rejected_count=document.getElementById('rejected_count');
     const rejections=rejected.length;
     rejected_count.innerText=rejections;
     if(activeFilter==="all"){
       jobs_count.innerText=`${count} jobs`;
+      if(count==0){
+      empty_section.classList.remove('hidden');
+    }else{
+          empty_section.classList.add('hidden');
+    }
     }
     else if(activeFilter==="interview"){
       jobs_count.innerText=`${interviews} of ${count} jobs`;
+           if(interviews==0){
+     
+      empty_section.classList.remove('hidden');
+    }else{
+     empty_section.classList.add('hidden');
+    }
     }
     else if(activeFilter==="rejected"){
       jobs_count.innerText=`${rejections} of ${count} jobs`;
+        if(rejections==0){
+      
+      empty_section.classList.remove('hidden');
+    }else{
+       empty_section.classList.add('hidden');
+    }
     }
 }
 count();
@@ -100,10 +117,11 @@ const element=document.addEventListener("click",function(event){
 
         interview.push(obj);
         count();
-        if(!hero_section.classList.contains('hidden')){
-
-        }else{
-            render_interview();
+       if(activeFilter === "interview"){
+          render_interview();
+            }
+      else if(activeFilter === "rejected"){
+        render_rejected();
         }
      }
      else{
@@ -134,11 +152,15 @@ const element=document.addEventListener("click",function(event){
 
         rejected.push(obj);
         count();
-        if(!hero_section.classList.contains('hidden')){
-
-        }else{
-            render_rejected();
+        if(activeFilter === "interview"){
+          render_interview();
+         }
+       if(activeFilter === "rejected"){
+        render_rejected();
         }
+     }
+     else{
+        alert("You cannot add the same item");
      }
 
     //  interview=interview.filter(item=> item.title!=obj.title)
@@ -198,7 +220,7 @@ function render_interview(){
 function render_rejected(){
     filtered_section.innerHTML=' ';
     for(let item of rejected){
-    let div=document.createElement('div');;
+    let div=document.createElement('div');
     div.innerHTML=`
      <div class="shadow-lg space-y-4 p-5 w-[80%] mx-auto">
 
